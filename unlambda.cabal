@@ -1,0 +1,28 @@
+Name:                unlambda
+Version:             0.1.0
+Synopsis:            Unlambda interpreter and REPL.
+Description:         
+  unlambda is a Haskell implementation of the programming
+  language Unlambda(http://www.madore.org/~david/programs/unlambda/).
+
+License:             GPL
+License-file:        LICENSE
+Author:              Veit Heller <veitheller.de>
+Maintainer:          Veit Heller <github.com/hellerve>
+Bug-Reports:         http://github.com/hellerve/unlambda/issues
+Build-Type:          Simple
+Category:            Compilers/Interpreters, Language
+Tested-with:         GHC == 7.8.4, GHC == 7.2.2
+Cabal-Version:       >= 1.2
+Extra-Source-Files:  README.md
+                     LICENSE
+
+Source-Repository head
+    Type:            git
+    Location:        git://github.com/hellerve/unlambda.git
+
+Executable           unlambda
+    Build-Depends:   base, mtl, transformers, haskeline, directory
+    Extensions:      ExistentialQuantification
+    ghc-options:     -Wall -Werror -O2 
+    Main-is:         unlambda.hs
