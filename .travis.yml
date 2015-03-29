@@ -10,4 +10,4 @@ ghc:
 
 script: 
     - cabal install
-    - unlambda examples/helloworld.un
+    - unlambda examples/helloworld.un | grep "Hello, world\!"
