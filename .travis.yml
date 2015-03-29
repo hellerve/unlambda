@@ -1,0 +1,13 @@
+language: haskell
+
+os:
+  - osx
+  - linux
+
+ghc:
+  - 7.8
+  - 7.6
+
+script: 
+    - cabal install
+    - unlambda examples/helloworld.un
