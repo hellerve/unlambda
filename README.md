@@ -1,13 +1,18 @@
 # unlambda
-An Unlambda Interpreter written in Haskell.
-
-##Status
+![general version](http://img.shields.io/badge/version-0.1.1-green.svg)
+![GPL Licensed](http://img.shields.io/badge/license-GPLv2-blue.svg)
 [![Build Status](https://travis-ci.org/hellerve/unlambda.png?branch=master)](https://travis-ci.org/hellerve/unlambda)
-
-It is not finished yet, but you can execute Unlambda code pretty easily with it
-by supplying the file containing the code via a command line argument.
+An Unlambda Interpreter written in Haskell.
 
 ##Building & Installing
 
 Unlambda has a cabal toolchain, which means you can install it by issuing `cabal install`
 if you have the tool installed.
+
+##Running
+
+You can run files like with any regular interpreter by using the command 
+`unlambda yourfile` or go into interactive mode by running unlambda without
+any other arguments. You will be greeted by your run-of-the-mill shell.
+
+Have fun!

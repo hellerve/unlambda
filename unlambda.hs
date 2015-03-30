@@ -1,17 +1,26 @@
-import System.IO
+import Control.Applicative
+import Control.Exception (catchJust, throwIO)
+import Control.Monad
+import Control.Monad.State
+import Control.Monad.Trans.Maybe
+import GHC.IO.Exception
 import System.Exit
 import System.Environment
-import Control.Monad
-import Control.Applicative
-import Control.Monad.State
-import Control.Exception (catchJust, throwIO)
-import qualified Data.Maybe
-import GHC.IO.Exception
+import System.IO
 import System.IO.Error
-import Control.Monad.Trans.Maybe
+import qualified Data.Maybe
 
 infixl 3 ¢
 infixl 4 $>
+
+name :: String
+name = "unλambda"
+
+version :: String
+version = "0.1.1"
+
+prompt :: String
+prompt = name ++ "> "
 
 type EvalState = StateT (Maybe Char) IO
 
@@ -146,7 +155,7 @@ printUsage = do printVersion
                          "https://github.com/hellerve/unlambda")
 
 printVersion :: IO ()
-printVersion = putStrLn "unlambda Version 0.1.0"
+printVersion = putStrLn (name ++ " Version " ++ version)
 
 printCommands :: IO ()
 printCommands = putStrLn "Press Ctrl-C to exit interpreter"
@@ -180,7 +189,7 @@ replinit = do
 
 loop :: IO ()
 loop = do
-    putStr "unlambda> "
+    putStr prompt
     hFlush stdout
     tree <- fmap Just (hBuild stdin) `catchEOF`
         (\_ -> putStrLn "Error: input too short" >> return Nothing)
