@@ -23,6 +23,7 @@ data Term = I
           | S3 Term Term 
           | V 
           | E 
+          | N
           | Readchar 
           | Printchar Char 
           | Compchar Char 
@@ -35,6 +36,7 @@ data Term = I
             deriving (Eq, Show)
 
 data Cont = Exiter 
+          | Nil
           | Dcheck Term Cont 
           | Ddelayed Term Cont 
           | Dundelayed Term Cont
@@ -56,20 +58,20 @@ maybeChar = hMaybeChar stdin
 f $> a = f <*> pure a
 
 app :: Term -> Term -> Cont -> EvalState (Cont, Term)
-app I a c = return (c,a)
-app K a c = return (c,K2 a)
-app (K2 a) _ c = return (c,a)
-app S a c = return (c,S2 a)
-app (S2 a) a2 c = return (c,S3 a a2)
+app I a c = return (c, a)
+app K a c = return (c, K2 a)
+app (K2 a) _ c = return (c, a)
+app S a c = return (c, S2 a)
+app (S2 a) a2 c = return (c, S3 a a2)
 app (S3 a a2) a3 c = descend c (App (App a a3) (App a2 a3))
-app V _ c = return (c,V)
+app V _ c = return (c, V)
 app E a _ = liftIO $ exitWith (if a == I then ExitSuccess else ExitFailure 1)
 app (D2 right) a c = descend (Ddelayed a c) right
 app Readchar a c = do
   curchar <- liftIO maybeChar
   put curchar
   descend c (App a $ maybe V (const I) curchar)
-app (Printchar char) a c = liftIO (putChar char) >> return (c,a)
+app (Printchar char) a c = liftIO (putChar char) >> return (c, a)
 app (Compchar char) a c = do
   cchar <- get
   let eq = Data.Maybe.fromMaybe False ((==) <$> cchar $> char)
@@ -79,9 +81,11 @@ app C a c = descend c (App a $ Callcc c)
 app (Callcc cont) a _ = return (cont, a)
 app D _ _ = error "D: this never happens"
 app (App _ _) _ _ = error "App: this never happens"
+app N a c = liftIO loop >> return (c, a)
 
 eval :: Cont -> Term -> EvalState (Cont, Term)
 eval Exiter a = app E a Exiter
+eval Nil a = app N a Exiter
 eval (Ddelayed rv k2) lv = app lv rv k2
 eval (Dundelayed lv cont) rv = app lv rv cont
 eval (Dcheck right cont) D = eval cont (D2 right)
@@ -94,7 +98,7 @@ descend cont tree = eval cont tree
 run :: Term -> IO ()
 run tree = run' start Nothing
     where 
-      start = descend Exiter tree
+      start = descend Nil tree
       e' = uncurry eval
       run' begin _state = runStateT begin _state >>= \(r,n) -> run' (e' r) n
 
@@ -109,9 +113,20 @@ buildM charaction = runMaybeT go
           '#' -> line
               where line = action >>= (\n -> if n == '\n' then go else line)
           _ -> lookup c one ¢ return <?> (lookup c two ¢ (`fmap` action) <?> go)
-      one = [('i', I), ('v',V), ('c',C), ('e', E), ('d', D), ('s',S), ('k',K),
-             ('r', Printchar '\n'), ('@',Readchar), ('|',Reprint)]
-      two = [('.', Printchar), ('?',Compchar)]
+      one = [ ('i', I)
+            , ('v', V)
+            , ('c', C)
+            , ('e', E)
+            , ('d', D)
+            , ('s', S)
+            , ('k', K)
+            , ('r', Printchar '\n')
+            , ('@', Readchar)
+            , ('|', Reprint)
+            ]
+      two = [ ('.', Printchar)
+            , ('?', Compchar)
+            ]
 
 (¢) :: forall b c. b -> (b -> c) -> c
 (¢) = flip ($)
