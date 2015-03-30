@@ -1,5 +1,5 @@
 Name:                unlambda
-Version:             0.1.0
+Version:             0.1.1
 Synopsis:            Unlambda interpreter and REPL.
 Description:         
   unlambda is a Haskell implementation of the programming
@@ -24,5 +24,5 @@ Source-Repository head
 Executable           unlambda
     Build-Depends:   base, mtl, transformers, haskeline, directory
     Extensions:      ExistentialQuantification
-    ghc-options:     -Wall -Werror -O2 
+    ghc-options:     -Wall -Werror -O2
     Main-is:         unlambda.hs
