@@ -104,10 +104,10 @@ descend :: Cont -> Term -> EvalState (Cont, Term)
 descend cont (App left right) = descend (Dcheck right cont) left
 descend cont tree = eval cont tree
 
-run :: Term -> IO ()
-run tree = run' start Nothing
+run :: Bool -> Term -> IO ()
+run interactive tree = run' start Nothing
     where 
-      start = descend Nil tree
+      start = if interactive then descend Nil tree else descend Exiter tree
       e' = uncurry eval
       run' begin _state = runStateT begin _state >>= \(r,n) -> run' (e' r) n
 
@@ -180,7 +180,7 @@ exec args = do
         tree <- fmap Just (hBuild fhandle) `catchEOF`
             (\_ -> putStrLn "Error: input too short" >> return Nothing)
         hClose fhandle
-        maybe (return ()) run tree
+        maybe (return ()) (run False) tree
 
 replinit :: IO ()
 replinit = do
@@ -193,4 +193,4 @@ loop = do
     hFlush stdout
     tree <- fmap Just (hBuild stdin) `catchEOF`
         (\_ -> putStrLn "Error: input too short" >> return Nothing)
-    maybe (return ()) run tree
+    maybe (return ()) (run True) tree
