@@ -10,7 +10,7 @@ import System.IO
 import System.IO.Error
 import qualified Data.Maybe
 
-infixl 3 ¢
+infixl 3 >%<
 infixl 4 $>
 
 name :: String
@@ -42,14 +42,14 @@ data Term = I
           | C 
           | Callcc Cont 
           | App Term Term 
-            deriving (Eq, Show)
+        deriving (Eq, Show)
 
 data Cont = Exiter 
           | Nil
           | Dcheck Term Cont 
           | Ddelayed Term Cont 
           | Dundelayed Term Cont
-              deriving (Eq, Show)
+        deriving (Eq, Show)
 
 catchEOF :: forall a. IO a -> (() -> IO a) -> IO a
 catchEOF = catchJust (guard.isEOFError)
@@ -62,9 +62,6 @@ hMaybeChar h = fmap Just (hGetChar h) `catchEOF` (\_ -> return Nothing)
 
 maybeChar :: IO (Maybe Char)
 maybeChar = hMaybeChar stdin
-
-($>) :: Applicative f => f (a -> b) -> a -> f b
-f $> a = f <*> pure a
 
 app :: Term -> Term -> Cont -> EvalState (Cont, Term)
 app I a c = return (c, a)
@@ -121,7 +118,7 @@ buildM charaction = runMaybeT go
           '`' -> App <$> go <*> go
           '#' -> line
               where line = action >>= (\n -> if n == '\n' then go else line)
-          _ -> lookup c one ¢ return <?> (lookup c two ¢ (`fmap` action) <?> go)
+          _ -> lookup c one >%< return <?> (lookup c two >%< (`fmap` action) <?> go)
       one = [ ('i', I)
             , ('v', V)
             , ('c', C)
@@ -137,11 +134,14 @@ buildM charaction = runMaybeT go
             , ('?', Compchar)
             ]
 
-(¢) :: forall b c. b -> (b -> c) -> c
-(¢) = flip ($)
+(>%<) :: forall b c. b -> (b -> c) -> c
+(>%<) = flip ($)
 
 (<?>) :: forall a a1. (a1 -> a) -> a -> Maybe a1 -> a
 (<?>) = flip maybe
+
+($>) :: Applicative f => f (a -> b) -> a -> f b
+f $> a = f <*> pure a
 
 hBuild :: Handle -> IO Term
 hBuild h = buildM (hMaybeChar h) >>= maybe (throwIO eofError) return
