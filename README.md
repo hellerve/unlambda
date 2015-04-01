@@ -4,8 +4,8 @@
 [![Build Status](https://travis-ci.org/hellerve/unlambda.png?branch=master)](https://travis-ci.org/hellerve/unlambda)
 
 An Unlambda Interpreter written in Haskell. It's basically a cleaned-up version
-of [this](https://github.com/bwo/unlambda/blob/master/unlambda.hs), complete
-with cabal files etc.
+of [this](https://github.com/bwo/unlambda/blob/master/unlambda.hs), where I
+added the REPL and the cabal files.
 
 ##Building & Installing
 
