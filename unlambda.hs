@@ -1,4 +1,3 @@
-import Control.Applicative
 import Control.Exception (catchJust, throwIO)
 import Control.Monad
 import Control.Monad.State
