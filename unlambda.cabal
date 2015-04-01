@@ -23,6 +23,6 @@ Source-Repository head
 
 Executable           unlambda
     Build-Depends:   base, mtl, transformers, haskeline, directory
-    Extensions:      ExistentialQuantification
+    Extensions:      ExistentialQuantification CPP
     ghc-options:     -Wall -Werror -O2
     Main-is:         unlambda.hs
