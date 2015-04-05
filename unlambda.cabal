@@ -4,6 +4,8 @@ Synopsis:            Unlambda interpreter and REPL.
 Description:         
   unlambda is a Haskell implementation of the programming
   language Unlambda(http://www.madore.org/~david/programs/unlambda/).
+  .
+  This version is largely based on [this](https://github.com/bwo/unlambda/blob/master/unlambda.hs).
 
 License:             GPL
 License-file:        LICENSE
