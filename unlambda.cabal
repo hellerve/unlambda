@@ -24,7 +24,7 @@ Source-Repository head
     Location:        git://github.com/hellerve/unlambda.git
 
 Executable           unlambda
-    Build-Depends:   base, mtl, transformers, haskeline, directory
+    Build-Depends:   base, mtl, transformers
     Extensions:      ExistentialQuantification CPP
     ghc-options:     -Wall -Werror -O2
     Main-is:         unlambda.hs
