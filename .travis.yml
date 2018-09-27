@@ -1,7 +1,6 @@
 language: haskell
 
 os:
-  - osx    
   - linux
 
 ghc:
