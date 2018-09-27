@@ -7,12 +7,12 @@ An Unlambda Interpreter written in Haskell. It's basically a cleaned-up version
 of [this](https://github.com/bwo/unlambda/blob/master/unlambda.hs), where I
 added the REPL and the cabal files.
 
-##Building & Installing
+## Building & Installing
 
 Unlambda has a cabal toolchain, which means you can install it by issuing `cabal install`
 if you have the tool installed.
 
-##Running
+## Running
 
 You can run files like with any regular interpreter by using the command 
 `unlambda yourfile` or go into interactive mode by running unlambda without
